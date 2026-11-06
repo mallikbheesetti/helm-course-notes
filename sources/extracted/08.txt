@@ -1,0 +1,234 @@
+Using Existing Helm Charts
+
+
+
+      Philippe Collignon
+      FREELANCE DEVOPS / CKAD
+
+      @phcollignon www.phico.io
+    Using
+Existing Helm
+    Charts      Helm Stable Repository
+                Search for existing charts
+                Use existing charts
+                Customizing child values
+From Package to Hub
+
+
+Sources
+  Þ Packages
+    Þ Repositories
+      Þ Hub
+                                    Analogies
+Helm                             Docker              Java               Javascript
+file.yaml                        System files        file.java          file.js
+
+Chart                            Image               Jar, ear ..        module
+
+Helm                             Docker              Maven              Npm
+
+Chart.yaml / requirements.yaml   Dockerfile (FROM)   pom.xml            pakage.json
+
+Helm repository                  Docker repository   Maven repository   npmjs.com
+
+Helm Stable repository           Docker hub          Maven central      npmjs.com
+
+hub.helm.sh                      hub.docker.org      search.maven.org   npmjs.com
+            Helm Repositories
+
+helm repo add stable https://charts.helm.sh/stable
+
+Not maintained. Deprecated charts.
+
+
+https://hub.helm.sh/
+
+https://artifacthub.io/
+
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm install my-release bitnami/mongodb
+            Helm Repositories
+
+helm repo add stable https://charts.helm.sh/stable
+
+Not maintained. Deprecated charts.
+
+
+https://hub.helm.sh/
+
+https://artifacthub.io/
+
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm install my-release bitnami/mongodb
+               Using the Command Line
+
+                  [ + ] helm repo
+> helm   repo listadd
+                  [    ] helm repo
+> helm   search [hub  | repo] keyword
+                  remove
+> helm inspect [all | readme | chart | values ] chart_name
+> helm show values chart_name
+> helm fetch chart_name
+> helm dependency update chart_name
+Customizing Existing Charts
+Values and Sub-charts
+
+   secret:
+      mongodb_uri:
+        username: your_user          Child Chart
+        password: your_password      values.yaml
+   service:
+     type: NodePort
+         Guestbook:
+             title: "Concert for Climate"
+         backend:                           Parent Chart
+             secret:                        values.yaml
+              mongodb_uri:
+                username: admin
+                password: password
+         Exporting Child Values : “exports:”
+                         Child values.yaml
+                exports:
+                                                           Chart.yaml
+                 data:
+                   mongodb_uri:                   dependencies:
+                      username: admin             - name: frontend
+                      password: password            version : ~1.2.1
+                                                      repository: http://...
+                                                      import-values:
+                 Guestbook:                             - data
+                   title: "Concert for Climate“
+                 mongodb_uri:
+                   username: your_user
+                       password: your_password
+http://github.com/phcollignon/helm3/
+                {{ .Values.mongodb_uri.username }}{
+lab10_helm_dependencies_export
+                         Parent values.yaml
+     Exporting Child Values : “child-parent”
+                        Child values.yaml
+
+                data:                                  Chart.yaml
+                  mongodb_uri:                 dependencies:
+                    username: admin             - name: frontend
+                    password: password            version : ~1.2.1
+                                                  repository: http://...
+                                                  import-values:
+                                                    - child: data
+                 frontend_data:                       parent: frontend_data
+                   mongodb_uri:
+                     username: your_user
+                     password: your_password
+http://github.com/phcollignon/helm3/
+           {{ .Values.frontend_data.mongodb_uri.username }}{
+lab10_helm_dependencies_child-parent
+                        Parent values.yaml
+       Global Values
+
+     secret:
+            mongodb_uri:
+              username: your_user        Child Chart
+           password: your_password       values.yaml
+            global:
+     service:
+       type: id:  "Id<AcB123FDx23>"
+             NodePort
+            guestbook:
+metadata:       title: "Concert for Climate"
+ labels:   backend:
+                                                Parent Chart
+             secret:
+   app.id : {{ .Values.global.id}}              values.yaml
+                  mongodb_uri:
+                    username: admin
+                    password: password
+Demo
+
+       Using Existing Stable Mongodb Charts
+
+
+
+
+           http://github.com/phcollignon/helm3/
+           lab11_helm_repository_begin
+           lab11_helm_repository_final
+Demo
+       Installing Wordpress in Kubernetes in 1
+       minute !
+
+
+
+
+            Let’s do it !
+          Using existing charts
+             Helm repository
+             Helm commands
+Summary      Helm hub
+          Customize existing charts
+             Override values
+             Export values
+             Map values : child-parent
+          Install stable/mongodb
+          Install a Wordpress blog with Helm
+           Guestbook application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+

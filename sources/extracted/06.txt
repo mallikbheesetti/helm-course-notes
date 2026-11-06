@@ -1,0 +1,840 @@
+Customizing Charts with Helm
+Templates
+
+
+
+      Philippe Collignon
+      FREELANCE DEVOPS / CKAD
+
+      @phcollignon www.phico.io
+  Helm      Why Helm Templates?
+Templates   How does the Helm Templates engine
+            work?
+            When does then Helm Templates engine
+            run?
+            Playing with Helm Template Values
+            Adding Logic to Helm Template
+Why Helm Templates?
+        Release Revision
+
+                      Kubernetes Cluster
+
+                                  Release
+        Helm
+Chart
+Release Revision
+               Helm Release
+
+                          Kubernetes Cluster
+
+                                      Release
+               Helm
+     Chart
+
+
+
+
+Helm Release
+                      Helm Releases
+         "dev" Release                  "test" Release
+apiVersion: v1                 apiVersion: v1
+kind: Service                  kind: Service
+metadata:                      metadata:
+ labels:                        labels:
+   name: dev-frontend             name: test-frontend
+ name: dev-frontend             name: test-frontend
+spec:                          spec:
+ type: ClusterIP                type: ClusterIP
+ ports:                         ports:
+   - port: 80                     - port: 80
+        targetPort: 3000               targetPort: 3000
+ selector:                      selector:
+   app: dev-frontend              app: test-frontend
+Helm Template Engine
+    Analogy with Other Template Engines
+
+            Template engine      Directives
+                         bash    ${ENV_VAR}
+  System
+                          bat    %ENV_VAR%
+
+
+                          Php    <?php echo $title ?>
+Web dev
+                 Jsp, Asp, EJS   <%= title %>
+
+
+                      Velocity   $var
+    Code              Yeoman     <%= var %>
+generator
+                Go Templates     {{ var }}
+                  Go Template Engine
+
+    Template
+apiVersion: v1
+kind: Service                                 Manifest
+metadata:                                 apiVersion: v1
+ name: {{.name}}                          kind: Service
+                                          metadata:
+                                            name: myservice
+type: NodePort
+name: myservice
+port: 80
+                            http://golang.org/pkg/text/template
+     Object                 http://github.com/phcollignon/Go-Template
+                    Helm Template Engine
+                            Sprig functions
+                              default
+        Template              quote
+apiVersion: v1                base64
+kind: Service                                          Manifest
+metadata:                                         apiVersion: v1
+ name: {{.Values.name}}                           kind: Service
+                                                  metadata:
+                                                    name: myservice
+   type: NodePort
+   name: myservice
+   port: 80                    Chart             Release
+                           Name:mychart       Name:myrelease
+       values.yaml
+                           Version:1.0.0      Revision:2
+                   Helm Template Execution
+
+      Template                                 Kubernetes Cluster
+
+apiVersion: v1                                            Release
+kind: Service
+                               Helm
+metadata:
+  name: {{.Values.name}}
+
+type: NodePort
+name: myservice
+port: 80
+                                 K8s file
+
+     values.yaml           apiVersion: v1
+                           kind: Service
+                           metadata:
+                             name: myservice
+                      Helm Template Test
+
+           Static                           Dynamic
+
+helm template [chart]       helm install [release] [chart] --
+                            dry-run --debug
+works without K8s cluster
+                            real helm install but without commit
+static release-name
+                            can generate a release-name
+
+> helm template [chart]
+> helm install [release] [chart] --debug –dry-run
+> helm install [release] [chart] --debug –dry-run 2>&1 |
+less
+Playing with Helm Template Data
+                                Helm Template Values
+                                       Template
+           values.yaml          apiVersion: v1
+       other-file.yaml          kind: Service
+         helm install –f file   metadata:
+                                  name:
+               variables        {{.Values.service.name}}
+helm install - - set foo=bar
+
+        Hierarchically          service:
+           organized             type: NodePort
+                                 name: myservice
+                                 port: 80
+
+
+                                     values.yaml
+                   Helm Template Values
+
+service:
+ type: NodePort
+ name: myservice
+                         -- set service.name = foo
+ port: 80
+ labels:                 -- set service.labels[0].name = foo
+   - name: name1
+   - name: name2
+{                          JSON Schema File
+    "service": {
+      "type":
+"NodePort",
+      "name":
+"myservice",
+        "port": 80,
+                "80",
+        "labels": [                > helm template [chart]
+            {
+                 "name":           > helm install [release] [chart]
+"name1"
+            },                     > helm upgrade [release] [chart]
+            {
+                 "name":
+"name2"
+            }
+        ]                                                    http://json-schema.org
+    }
+}
+                   Helm Template Built-in Objects
+                              Template
+                   apiVersion:  v1 v1
+                      apiVersion:
+                     apiVersion:    v1
+                    apiVersion:  v1
+                   kind:  Service
+                      kind:
+                     kind:   Service
+                            Service
+     Chart data     kind:  Service
+                   metadata:
+                      metadata:
+                     metadata:
+                    metadata:
+   Release data      annotations:
+                        name:  {{.Chart.Name}}
+                               {{.Release.Name}}
+                       annotations:    tpl:{{.Template.Name}}
+                      annotations:   data:{{.Files.Get  conf.ini}}
+                           k8s:{{.Capabilities.KubeVersion}}
+Kubernetes data
+       File data           Release.Name
+                         version: 1.0.0
+                           Release.Namespace
+                      Capabilities.APIVersions
+                         name:Template.Name
+                               mychart
+  Template data            Release.Service
+                      Capabilities.KubeVersion
+                         appVersion:  "2.1"
+                              Template.BasePath
+                           Release.Revision
+                                       conf.ini
+                                             .Minor
+                           Release.IsUpgrade
+                                  Template.Major
+                              chart.yaml
+                           Release.IsInstall
+                                       Files
+                               Kubernetes
+                                Release
+                         Helm Template Example
+                                      Values       K8s object definition
+                               service:
+             Template                          apiVersion: v1
+                                 type:
+                                               kind: Service
+apiVersion: v1                 ClusterIP
+                                               metadata:
+kind: Service                       port: 80
+                                                name: myrelease-mychart
+metadata:
+                                                labels:
+ name: {{ .Release.Name }}-{{ .Chart.Name }}
+                                                  app.kubernetes.io/name: mychart
+ labels:
+                                               spec:
+   app.kubernetes.io/name: {{ .Chart.Name }}
+                                                type: ClusterIP
+spec:
+                                                ports:
+ type: {{ .Values.service.type }}
+                                                  - port: 80
+ ports:
+                                                       targetPort: 80
+   - port: {{ .Values.service.port }}
+                                                       protocol: TCP
+        targetPort: 80
+                                               selector:
+        protocol: TCP
+                                                  app.kubernetes.io/name: mychart
+selector:
+   app.kubernetes.io/name: {{ .Chart.Name }}
+Values and Sub-charts
+
+   secret:
+      mongodb_uri:
+        username: your_user          Child Chart
+        password: your_password      values.yaml
+   service:
+     type: NodePort
+         Guestbook:
+             title: "Concert for Climate"
+         backend:                           Parent Chart
+             secret:                        values.yaml
+              mongodb_uri:
+                username: admin
+                password: password
+       Global Values
+
+     secret:
+            mongodb_uri:
+              username: your_user        Child Chart
+           password: your_password       values.yaml
+            global:
+     service:
+       type: id:  "Id<AcB123FDx23>"
+             NodePort
+            guestbook:
+metadata:       title: "Concert for Climate"
+ labels:   backend:
+                                                Parent Chart
+             secret:
+   app.id : {{ .Values.global.id}}              values.yaml
+                  mongodb_uri:
+                    username: admin
+                    password: password
+Adding Logic to Helm Template
+                  Using Functions & Pipelines
+                  Modifying Scope using "with"
+                  Controlling whitespaces & indentation
+
+Adding Logic to   Logical operators in Helm Templates
+
+ Helm Template    Flow control (conditions & loops)
+                  Using variables
+                  Calling Helper functions & Sub-templates
+Using Functions and Pipelines
+                    Functions and Pipelines
+              Function                                   Pipeline
+
+           quote value                             value | quote
+        Analogy : quote(value)                         value | quote
+
+
+
+ default default_value value               value | default default_value
+
+Analogy : default (default_value, value)     value |     defaut default_value
+
+
+
+                                               value |      upper   |   quote
+                               Default
+apiVersion: v1
+kind: Service
+metadata:
+ labels:
+   app.kubernetes.io/name: {{ .Values.service.name | default .Chart.Name }}
+
+
+service:
+  type: NodePort                     apiVersion: v1
+  name: myservice                    kind: Service
+  port: 80                           metadata:
+                                       labels:
+                                         app.kubernetes.io/name: myservice
+       Functions and Pipelines
+
+
+Go text/template package (http://golang.org/pkg/text/template/)
+
+
+
+Sprig functions project (http://masterminds.github.io/sprig/)
+
+Helm project (http://helm.sh)
+
+
+
+No Go custom functions support (use helper functions)
+       Functions and Pipelines
+                Function      Pipeline
+default default_value value   value | default default_value
+               quote value    value | quote
+
+               upper value    value | upper
+            trunc value 63    value | trunc 63
+       trimSuffix "-" value   value | trimSuffix "-"
+
+             b64enc value     value | b64enc
+         randAlphaNum 10      value | randAlphaNum 10
+
+              toYaml value    value | toYaml
+      printf format value …   list value … | join " -"
+                           trunc & trimSuffix
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Values.service.name | trunc 63 | trimSuffix "-" }}
+
+
+service:
+  type: NodePort
+  name: myservice-                        apiVersion: v1
+with-a-very-long-
+                                          kind: Service
+name-that-will-be-
+truncated-by-trunc-                       metadata:
+and-trimsuffix-and-                         labels:
+which-is-too-long-
+                                              app.kubernetes.io/name: myservice-
+for-Kubernetes-
+                                          with-a-very-long-name-that-will-be-
+labels
+                                          truncated-by-trunc
+  port: 80
+                             b64enc & quote
+apiVersion: v1
+kind: Secret
+[…]
+data:
+  mongodb-root-password:   {{ .Values.mongodbRootPassword | b64enc | quote }}
+
+
+
+
+                                         apiVersion: v1
+                                         kind: Secret
+                                         […]
+                                         data:
+mongodbRootPassword : T9rYGFAMGE
+                                           mongodb-root-password: "VDlyWUdGQU1HRQ=="
+Modifying Scope using "With"
+                     Modifying Scope Using With
+spec:                                                 spec:
+  type: {{ .Values.service.type }}                      {{ with .Values.service }}
+  ports:                                                type: {{ .type }}
+    - port: {{ .Values.service.port }}                  ports:
+        targetPort: 80                                    - port: {{ .port }}
+                                                              targetPort: 80
+                                                        {{ end }}
+
+
+
+                                         spec:
+                                           type: ClusterIP
+        service:
+                                           ports:
+          type: ClusterIP
+                                             - port: 80
+          port: 80                               targetPort: 80
+Controlling Whitespaces and Indent
+                Removing Extra Carriage Returns
+spec:
+  -
+  {{                 -
+         with .Values.service   }}
+  type: {{ .type }}
+  ports:
+       - port: {{ .port }}
+         targetPort: 80
+  -
+  {{     end   }}
+
+
+
+
+                                     spec:
+                                       type: ClusterIP
+                                       ports:
+service:                                 - port: 80
+  type: ClusterIP                            targetPort: 80
+  port: 80
+                Removing Extra Carriage Returns
+spec:
+  type: ClusterIP
+  ports:
+    - port:
+                 -
+{{- with .Values.service   }}
+  {{ .port }}
+     -
+{{- end    }}
+        targetPort: 80
+
+                                spec:
+                                 type: ClusterIP
+                                 ports:
+service:
+                                   - port: 80targetPort: 80
+  port: 80                              targetPort: 80
+                                          80
+
+
+                                        targetPort: 80
+               Indent by Template
+
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+        targetPort: 80
+{{ indent
+   .Values.tcp
+          6 .Values.tcp }}
+               }}
+
+
+                             spec:
+service:                       type: ClusterIP
+  port: 80                     ports:
+tcp: "protocol: TCP"             - port: 80
+                                     targetPort: 80
+                             protocol:
+                                   protocol:
+                                       TCP   TCP
+                          Formated Output
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: {{- printf "%s-%s" .Release.Name .Values.service.name -}}
+
+
+
+
+service:                               apiVersion: v1
+  type: NodePort                       kind: Service
+  name: myservice                      metadata:
+  port: 80                               labels:
+                                           app.kubernetes.io/name: myrelease-myservice
+Logical Operators
+  Logical Operators are Functions
+
+Operator       Function   Example
+Equal to          eq      eq .Val1 .Val2
+Not equal to      ne      ne .Val1 .Val2
+Greater than      gt      gt .Val1 .Val2
+Lower than        lt      lt .Val1 .Val2
+Or                or      or .Val1 .Val2
+And              and      and .Val1 .Val2
+Not              not      not .Val1
+            Example of Logical Operators
+
+{{- if and .adminEmail (or .serviceAccountJson
+.existingSecret) }}
+                                                 (Cf. oauth2-proxy : deployment.yaml)
+
+
+{{- if (and (eq .Values.service.type "NodePort") (not (empty
+.Values.service.nfsNodePort))) }}
+                                                 (Cf. nfs-server-provisioner :
+                                                 service.yaml)
+{{- if or .Values.rbac.pspEnabled (and .Values.rbac.namespaced
+(or .Values.sidecar.dashboards.enabled
+.Values.sidecar.datasources.enabled)) }}
+                                                 (Cf. grafana : role.yaml)
+Flow Control
+                                   Conditions
+{{- if Values.ingress.enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/name:
+{{- if .Values.service.name -}}
+{{ .Values.service.name | trimSuffix "-"}}
+{{- else -}}                                 apiVersion: extensions/v1beta1
+{{ .Chart.Name }}                            kind: Ingress
+{{- end -}}                                  metadata:
+{{- end }}                                     labels:
+                                                 app.kubernetes.io/name: myingress
+ingress:
+  enabled: true
+  name: myingress
+                                                     Loops
+                                                                                    apiVersion: extensions/v1beta1
+                                                 ingress:
+                                                                                    kind: Ingress
+                                                   hosts:                           […]
+                                                     - hostname: frontend.local     spec:
+apiVersion: extensions/v1beta1
+                                                       paths:                             rules:
+kind: Ingress
+                                                            - path: "/public"               - host: "frontend.local"
+[…]
+                                                              service: "frontend"             http:
+spec:
+                                                            - path: "/admin"                       paths:
+{{- range .Values.ingress.hosts }}
+                                                              service: "admin"                       - path: /public
+      - host: {{ .hostname | quote }}
+                                                     - hostname: backend.local                         backend:
+        http:
+                                                       paths: []                                            serviceName: frontend
+          paths:
+          {{- range .paths }}                                                                               servicePort: http
+             - path: {{ .path }}                                                                     - path: /admin
+                backend:                                                                               backend:
+                   serviceName: {{ .service }}                                                              serviceName: admin
+                   servicePort: http                                                                        servicePort: http
+          {{- end }}                                                                        - host: "backend.local"
+{{- end }}                                                                                    http:
+                                                                                                   paths:
+Using Variables
+        Why Variables?
+
+
+spec:
+  {{ with .Values.service }}
+  type: {{ .type }}
+  ports:
+    - port: {{ .port }}
+        targetPort: 80
+        name {{ .Values.defaultPortName }}
+  {{ end }}
+                           Why Variables?
+apiVersion: extensions/v1beta1
+kind: Ingress
+[…]
+spec:
+{{- range .Values.ingress.hosts }}
+      - host: {{ .hostname | quote }}
+        http:
+          paths:
+          {{- range .paths }}
+             - path: {{ .path }}-{{ .hostname }}
+                backend:
+                   serviceName: {{ .Release.Name }} {{ .service }}
+                   servicePort: http
+          {{- end }}
+{{- end }}
+              Using a Variable
+
+{{ $defaultPortName := .Values.defaultPortName }}
+spec:
+  {{ with .Values.service }}
+  type: {{ .type }}
+  ports:
+    - port: {{ .port }}
+        targetPort: 80
+        name {{ $defaultPortName
+                .Values.defaultPortName
+                                 }}     }}
+  {{ end }}
+      Using Variable and Global Variable
+apiVersion: extensions/v1beta1
+kind: Ingress
+[…]
+spec:
+{{- range $currentHost
+          .Values.ingress.hosts
+                       :=  .Values.ingress.hosts }}
+                                }}
+{{- - host:
+    $currentHost
+            {{ .hostname
+                 := . -}}| quote }}
+      - host:
+        http: {{ .hostname | quote }}
+        http:
+          paths:
+          {{-
+          paths:
+              range .paths }}
+          {{- range
+              path: {{
+                    .paths
+                       .path
+                           }}}}-{{ $currentHost.suffix }}
+             - path:
+               backend:
+                     {{ .path }}-{{ $currentHost.suffix }}
+               backend:
+                 serviceName: {{ $.Release.Name }} {{ .service }}
+                   servicePort: {{
+                   serviceName: http
+                                   $.Release.Name }} {{ .service }}
+          {{- end }}
+                servicePort: http
+{{- end }}
+        {{- end }}
+{{- end }}
+Calling Helper Functions and Sub-templates
+                     Why Using Helper Functions
+      apiVersion: v1
+      kind: Service
+      metadata:
+           labels:
+             app.kubernetes.io/name:
+                               {{- if {{ .Values.service.name | -}}
+                                       .Values.fullnameOverride trunc 63 | trimSuffix "-" }}
+                               {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+                               {{- else -}}
+
+service:                       {{- printf "%s-%s" .Release.Name $name | trunc 63 |
+                               trimSuffix "-" -}}
+  type: NodePort
+                               {{- end -}}
+  name: myservice                             apiVersion: v1
+  port: 80                                    kind: Service
+                                              metadata:
+                                                labels:
+                                                  app.kubernetes.io/name: myservice
+                         Using a Sub-template
+                                       _helpers.tpl
+{{- define "mychart.fullname" -}}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+              apiVersion: v1
+{{- end -}}
+              kind: Deployment
+{{- end -}}
+              metadata:
+                 labels:
+                     app.kubernetes.io/name: {{ include "mychart.fullname" . }}
+               […]
+               spec:
+                 selector:
+                     matchLabels:
+                       app.kubernetes.io/name: {{ include "mychart.fullname" . }}
+_helpers.tpl
+
+
+
+ Where is _helpers.tpl file ?
+ Files prefixed by ‘_’ are not rendered as
+ Kubernetes objects
+ .helmignore
+           Helm Library
+
+Chart.ya
+ml
+          Indenting a Sub-template
+
+apiVersion: v1
+kind: Deployment
+metadata:
+  labels:
+      app.kubernetes.io/name: {{ include "mychart.fullname" . }}
+{{ include "mychart.myfunnylabel" . }}
+                                     | indent 4 }}
+{{ template "mychart.myfunnylabel" . |
+                                     }}indent 4 }}
+[…]
+spec:
+  selector:
+      matchLabels:
+        app.kubernetes.io/name: {{ include "mychart.fullname" . }}
+                                    NOTES.txt
+1. Get the application URL by running these commands:
+{{- if .Values.ingress.enabled }}
+{{- range $host := .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+  {{- end }}
+{{- end }}
+
+
+NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+      You can watch the status of by running 'kubectl get --namespace {{
+.Release.Namespace }} svc -w {{ include "mychart.fullname" . }}’
+      export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }}
+{{ include "mychart.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+      echo http://$SERVICE_IP:{{ .Values.service.port }}
+Demo
+       Customizing Guestbook Helm Chart:
+       Frontend Chart values
+
+
+
+
+           http://github.com/phcollignon/helm3/
+           lab7_helm_template_begin
+           lab7_helm_template_final
+Demo
+       Customizing Guestbook Helm Chart:
+       Adding logic
+
+
+
+
+           http://github.com/phcollignon/helm3/
+           lab8_helm_template_begin
+           lab8_helm_template_final
+Demo
+       Customizing Guestbook Helm Chart:
+       Installing Dev & Test Releases
+
+
+
+
+           http://github.com/phcollignon/helm3/
+           lab9_helm_template_begin
+           lab9_helm_template_final
+GuestBook Application: Angular SPA + API
+
+
+                        Frontend
+
+       GET frontend
+
+          Angular SPA
+
+
+            POST backend
+
+                                   Backend API   Database
+            Helm Template engine?
+  Helm      Helm Template Data
+Templates   Adding Logic to Helm Template
+             - Functions and Pipelines
+             - Scope with “width”
+             - Controlling whitespaces
+             - Logical operators
+             - Flow controls
+             - Variables
+             - Sub-templates
+           Guestbook Application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook Application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook Application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+                      Helm 2 vs Helm 3
+
+                            Helm 2      Helm 3
+helm install --name [release] [chart]   helm install [ release] [chart]
+                 helm install [chart]   helm install --generate-name [chart]
+
+
+
+      helm delete --purge [release]     helm uninstall [release]
+               helm delete [release]    helm uninstall --keep-history [release]
+
+
+                  helm get [release]    helm get all [release]
+

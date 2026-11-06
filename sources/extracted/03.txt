@@ -1,0 +1,158 @@
+Discovering Helm
+
+
+
+      Philippe Collignon
+      FREELANCE DEVOPS / CKAD
+
+      @phcollignon www.phico.io
+Discovering
+   Helm       Why Helm?
+              What is Helm ?
+               - Concepts: Charts, Templates,
+                 Repositories.
+               - How does it work?
+                       Application in a Kubernetes Cluster
+
+      Application
+       Container
+             Pod                                      Secret
+                    Ingress      Service        Pod
+          Service
+          Ingress
+      ConfigMap
+                                   Volume          ConfigMap
+          Secrets
+Volumes: PV, PVC,
+         Storage
+Kubernetes API:              Kubernetes
+                               Cluster
+    REST Client
+      Go Client    Kubectl
+        Kubectl
+
+
+    Limitations:
+
+     Packaging
+     Versioning
+  Customization
+  Dependencies
+Demo   Demo application overview
+       Installing with Kubectl
+       Upgrading with Kubectl
+       GuestBook Application: First Version
+           ü Pod
+           ü Service
+           ü Ingress
+
+
+
+
+Frontend
+
+
+goes
+here;
+three                     http://github.com/phcollignon/helm3
+lines or                  /
+                          lab1_kubectl_version1
+   GuestBook Application: Second Version
+           ü   ConfigMap                 ü Secret               ü   Secret
+           ü   Pod                       ü Pod                  ü   PV
+           ü   Service                   ü Service              ü   PVC
+           ü   Ingress                                          ü   Pod
+                                                                ü   Service
+
+
+
+
+Frontend                   Backend API               Database
+
+
+                           goes here;                 goes
+                           three lines                here;
+                           or fewer is                three
+                                      http://github.com/phcollignon/helm3
+                           best                       lines or
+                                      /
+                                                      fewer is
+                                      lab2_kubectl_version2
+                                                      best
+What is Helm?
+What is Helm?
+Helm is a package manager for Kubernetes.
+     Analogy with Other Package Managers
+
+             Package manager   Packages
+                         apt   deb
+   System
+                        yum    rpm
+
+
+
+                       maven   Jar, Ear, …
+
+      Dev               npm    Node Modules
+
+                         pip   Python packages
+
+
+Kubernetes              Helm   Charts
+Helm Analogy
+               System & apt:
+
+               > apt install mysql
+               > apt update
+
+
+               Kubernetes & helm:
+
+               > helm install     mysql
+               stable/mysql
+               > helm upgrade mysql
+               stable/mysql
+          How Does Helm Work?
+
+                       Kubernetes Cluster
+
+
+
+Kubectl
+ Chart
+
+            Helm
+      Three-Way Merge Patches Update
+Old Chart
+                      Kubernetes Cluster
+
+                              Live state
+New Chart
+
+
+
+
+ Kubectl
+       Namespaces
+          Kubernetes Cluster
+
+           Default Namespace
+
+
+
+Helm
+           Another Namespace
+        A Word About Helm 2
+
+                       Kubernetes Cluster
+
+                       Tiller
+                gRPC
+Chart    Helm
+           Helm Features
+
+
+
+
+Charts   Templates   Dependencies   Repositories
+

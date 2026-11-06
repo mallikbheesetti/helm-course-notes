@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "1.27"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  host: chart-skeleton.local
+  path: /
+  pathType: Prefix
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

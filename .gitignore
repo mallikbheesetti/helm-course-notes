@@ -1,0 +1,17 @@
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Lab output
+dist/
+vendor/
+rendered.yaml
+values-prod.yaml
+values-secret.yaml
+secrets/
+
+# Local chart dependencies (decide whether to vendor intentionally)
+**/charts/*.tgz

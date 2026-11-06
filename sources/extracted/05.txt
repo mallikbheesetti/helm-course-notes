@@ -1,0 +1,215 @@
+Building Helm Charts
+
+
+
+      Philippe Collignon
+      FREELANCE DEVOPS / CKAD
+
+      @phcollignon www.phico.io
+Helm Charts
+              Building a Helm Chart
+              Installing a Release
+Helm Chart Structure
+Helm Chart Structure
+Helm Chart – Dependencies
+Helm Chart - Documentation
+Helm Chart
+           Chart.yaml
+Chart.ya
+ml
+
+
+
+
+              Major, Minor, Patch
+              (SemVer 2.0)
+Demo
+
+       Building Guestbook Helm Chart
+       GuestBook Application: First Version
+           ü Pod
+           ü Service
+           ü Ingress
+
+
+
+
+Frontend
+
+
+goes
+here;
+three
+                        http://github.com/phcollignon/helm3/
+lines or
+                        lab5_helm_chart_version1
+Building Guestbook Chart
+Helm Concepts
+               Helm Release
+
+                          Kubernetes Cluster
+
+                                      Release
+               Helm
+     Chart
+
+
+
+
+Helm Release
+              Release Revision
+
+                            Kubernetes Cluster
+
+                                        Release
+               Helm
+     Chart
+
+
+
+
+Release revision
+                Chart Version
+
+                            Kubernetes Cluster
+
+                                        Release
+                Helm
+     Chart
+
+
+
+
+Chart version
+   Chart: definition
+  Release: instance
+
+
+Application version    Helm Concepts
+      Chart version
+   Release revision
+                Helm Commands
+
+                      Action     Command
+             Install a Release   helm install [release] [chart]
+  Upgrade a Release revision     helm upgrade [release] [chart]
+
+Rollback to a Release revision   helm rollback [release] [revision]
+
+         Print Release history   helm history [release]
+
+       Display Release status    helm status [release]
+
+     Show details of a release   helm get all [release]
+           Uninstall a Release   helm uninstall [release]
+
+                List Releases    helm list
+                      Helm 2 vs Helm 3
+
+                            Helm 2      Helm 3
+helm install --name [release] [chart]   helm install [ release] [chart]
+                 helm install [chart]   helm install --generate-name [chart]
+
+
+
+      helm delete --purge [release]     helm uninstall [release]
+               helm delete [release]    helm uninstall --keep-history [release]
+
+
+                  helm get [release]    helm get all [release]
+Demo   Installing a Chart
+       Upgrading a Release
+       Rolling Back a Release
+       Deleting a Release
+         Rollback Guestbook
+        Upgrading
+         Installing GuestbookRelease
+                              Release
+                                Kubernetes Cluster
+Chart
+                                             Release
+               Helm
+
+
+
+
+                      http://github.com/phcollignon/helm3/
+                      lab5_helm_chart_version1
+Demo
+       Upgrading Release to version 2.0
+       Building an Umbrella Chart
+   GuestBook Application: Second Version
+           ü   ConfigMap                 ü Secret               ü   Secret
+           ü   Pod                       ü Pod                  ü   PV
+           ü   Service                   ü Service              ü   PVC
+           ü   Ingress                                          ü   Pod
+                                                                ü   Service
+
+
+
+
+Frontend                   Backend API               Database
+
+
+                           goes here;                goes
+                           three lines               here;
+                           or fewer is               three
+                                    http://github.com/phcollignon/helm3/
+                           best                      lines or
+                                    lab6_helm_chart_version2
+                                                     fewer is
+                                                     best
+Building Guestbook Umbrella Chart
+          Chart structure
+          Building a Chart
+
+Summary   Helm concepts:
+             Release
+             Revision
+             Chart version
+          Helm commands
+          Install, Upgrade, Rollback and Delete
+          application with Helm
+           Guestbook Application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook Application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook Application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+

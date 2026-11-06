@@ -1,0 +1,16 @@
+{{- if .Values.ingress.enabled }}
+The application is available at:
+
+  http://{{ .Values.ingress.host }}{{ .Values.ingress.path }}
+
+Make sure the host resolves to your Ingress controller and that the
+controller is running.
+{{- else }}
+The application is not exposed through an Ingress. Forward a local port:
+
+  kubectl port-forward svc/{{ include "chart-skeleton.fullname" . }} 8080:{{ .Values.service.port }} -n {{ .Release.Namespace }}
+
+Then open:
+
+  http://127.0.0.1:8080
+{{- end }}

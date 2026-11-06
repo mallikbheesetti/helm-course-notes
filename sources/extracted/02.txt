@@ -1,0 +1,87 @@
+Course Introduction
+
+
+
+      Philippe Collignon
+      FREELANCE DEVOPS / CKAD
+
+      @phcollignon www.phico.io
+Be organized with archives !
+Use package managers
+Kubernetes applications contain many
+Kubernetes objects
+Simplify your life with Helm
+                      Helm ?
+
+What is Helm ?
+
+How does Helm work ?
+
+What is a Helm chart ?
+
+How do you define
+dependencies ?
+
+What is a Helm repository ?
+
+How do you install applications with Helm ?
+ Course    Discovering Helm
+Overview
+           Building Helm charts
+           Customizing charts with Helm templates
+           Managing charts dependencies
+           Using existing charts from repositories
+               Learn & Practice
+
+
+
+
+Learn the theory!            Practice with 11 Labs!
+       Installing Kubernetes with Helm
+
+Demo   Building an Helm Chart
+        - Umbrella Chart
+
+       Installing a Release
+       Customizing Helm Templates
+       Managing dependencies
+       Packaging and working with repositories
+Sample Application : Guestbook for Events
+           GuestBook for Events Application
+
+
+            ü   ConfigMap                 ü Secret               ü   Secret
+            ü   Pod                       ü Pod                  ü   PV
+            ü   Service                   ü Service              ü   PVC
+            ü   Ingress                                          ü   Pod
+                                                                 ü   Service
+
+
+
+
+Frontend                    Backend API               Database
+  Source Code for Labs
+https://github.com/phcollignon/helm3
+Prerequesites
+
+
+
+  Kubernetes concepts
+  No required programming
+  Unix shell
+Goal for Attendees
+
+
+    Understand Helm concepts
+    Build and customize a Chart
+    Use Helm to install and manage Kubernetes
+    application versions
+Helm 3 Course !
+
+
+   This course is about Helm 3 !
+   Helm 2 architecture is different
+   Helm 2 command line and Chart structure
+   might differ
+   Helm 2 charts are compatible with Helm 3 …
+

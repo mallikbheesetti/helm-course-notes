@@ -1,0 +1,245 @@
+Managing Dependencies
+
+
+
+     Philippe Collignon
+     FREELANCE DEVOPS / CKAD
+
+     @phcollignon www.phico.io
+  Managing
+Dependencies   Packaging a chart
+               Publishing to a repository
+               How to define dependencies
+               Tags and conditions
+Packaging Your Charts
+                      Packaging a Chart
+
+                                                 Chart
+— Compress chart folder in a .tar.gz archive
+
+— Add a version number to the archive
+
+
+
+
+                                                 Chart.yam
+                          chart_name-1.2.0.tgz   l
+
+
+
+
+> tar -zcvf chart_name-1.2.0.tgz chart_name
+> helm package chart_name
+Publishing Charts in Repositories
+                     Helm Repository
+
+frontend-1.2.0.tgz     backend-1.2.2.tgz      database-1.2.2.tgz
+
+
+
+
+                                 index.yaml
+
+                        Helm repository
+                Publishing in a Repository
+Create the index.yaml
+Upload charts’ archives and index file to an http server
+   — Nginx, Apache, Cloud or use Chartmuseum
+
+Provenance files
+
+
+>
+> helm repo index .
+> helm package --sign
+> helm verify chart.tgz
+> helm install --verify
+                     Helm Repository
+
+frontend-1.2.0.tgz     backend-1.2.2.tgz      database-1.2.2.tgz
+
+
+
+
+ Helm
+
+
+
+                                 index.yaml
+
+                        Helm repository
+               Managing a Repository List
+Helm maintains a list of repositories
+ - Stable
+ - Customs
+
+Update that list by adding or removing repositories
+
+
+
+
+> helm repo add myrepo http://myserver.org/charts
+> helm repo remove myrepo
+                     Default Repository
+No repository by default in Helm 3
+Highly recommended to add stable helm repository
+
+
+
+
+>   helm repo add stable https://charts.helm.sh/stable
+Defining Dependencies
+Charts Dependencies
+         Charts Dependencies
+
+              frontend-1.2.0.tgz
+
+
+
+                                    backend-1.2.2.tgz
+
+
+
+
+Chart.yaml     database-1.2.2.tgz
+                    Chart.yaml
+
+requirements.yaml
+                requirements.yaml
+requirements.yaml
+  Semver 2.0 Versions
+
+         Range        Versions
+            ~1.2.3    >= 1.2.3, < 1.3.0
+             1.2.x    >= 1.2.0, < 1.3.0
+
+
+            ^1.2.3    >= 1.2.3, < 2.0.0
+             1.x.x    >= 1.2.0, < 2.0.0
+
+
+        1.2 - 1.4.5   >= 1.2, <= 1.4.5
+
+
+https://github.com/masterminds/semver
+                Charts Dependencies
+
+
+
+
+     Chart.yaml
+     (requirements.yam    Chart.yaml
+     l)                  dependencies   Helm repository
+
+
+
+
+> helm dependency update guestbook
+> helm dependency list guestbook
+Chart.lock
+                  Charts Dependencies
+
+
+
+                                 ?
+     Chart.yaml
+     Chart.lock         Chart.lock
+                                     Helm repository
+
+
+
+
+> helm dependency build guestbook
+Adding Conditions and Tags
+             Conditions & Tags
+Chart.yaml
+
+                                 values.yaml
+                       Conditions & Tags
+
+All charts are downloaded with “helm dependency update”
+Partial installation with “helm install”
+“--set ..” overrides value.yaml
+Conditions override tags
+
+
+> helm dependency update guestbook
+> helm install demo guestbook
+> helm install demo guestbook --set database.enabled=true
+> helm install demo guestbook --set tags.api=false
+Demo
+       Packaging charts
+       Publishing charts in repositories
+
+
+
+
+            http://github.com/phcollignon/helm3/
+            lab10_helm_dependencies_begin
+            lab10_helm_dependencies_final
+Demo
+       Managing dependencies
+
+
+
+
+           http://github.com/phcollignon/helm3/
+           lab10_helm_dependencies_begin
+           lab10_helm_dependencies_final
+Demo
+       Controlling dependencies with conditions
+       and tags
+
+
+
+
+           http://github.com/phcollignon/helm3/
+           lab10_helm_dependencies_begin
+           lab10_helm_dependencies_final
+Summary   Packaging your chart
+          Publishing in a Helm repository
+          Define and manage dependencies
+          Add conditions and tags
+           Guestbook application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+

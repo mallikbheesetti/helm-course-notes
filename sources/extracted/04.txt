@@ -1,0 +1,119 @@
+Installing Kubernetes and Helm
+
+
+
+      Philippe Collignon
+      FREELANCE DEVOPS
+
+      @phcollignon www.phico.io / CKAD
+             Our Lab Environment
+
+                      Docker
+
+                       Minikube
+                      Kubernetes
+> minikube              Cluster      Helm
+> kubectl                          repository
+
+
+
+
+> helm
+Installing Kubernetes and Kubectl
+                            Mac OS users
+
+> minikube tunnel
+
+
+/etc/hosts
+ […]
+
+
+ 127.0.0.1 frontend.minikube.local
+ 127.0.0.1 backend.minikube.local
+Demo
+
+       Installing Kubernetes and Kubectl
+Installing Helm
+             Our Lab Environment
+
+                       Docker
+
+                       Minikube
+                      Kubernetes
+> minikube              Cluster      Helm
+> kubectl                          repository
+
+
+
+
+> helm
+Demo
+
+       Installing Helm
+Cleaning Helm
+       Cleaning Helm
+
+            Kubernetes Cluster
+            Helm secrets
+
+             <<
+Helm
+Demo
+       Uninstalling Helm
+Installing Helm 2
+Helm 2
+         Installing Helm 2
+         Configuring Tiller security
+      Installing Helm 2 and Tiller
+
+                  Kubernetes Cluster
+                  Tiller
+
+  Helm
+
+
+
+
+> helm init
+       Tiller Service Account
+
+                Kubernetes Cluster
+
+                Tiller
+       gRPC
+
+Helm
+Summary   Install Kubernetes
+          Install Helm
+          Cleaning Helm installation
+          Helm 2 and Tiller installation
+           Guestbook Application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+           Guestbook Application
+
+
+
+                                    stable/mongodb
+
+
+                                     Stable repo
+Frontend   Backend API   Database
+
+
+
+
+                                     Local repo
+
