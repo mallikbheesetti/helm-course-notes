@@ -1,5 +1,7 @@
 # Lab 11 - Use an Existing Chart
 
+> Reference implementation: [`labs/reference/lab11/guestbook`](../labs/reference/lab11/guestbook)
+
 ## Goal
 
 Find, inspect, install, customize, upgrade, and remove a third-party chart

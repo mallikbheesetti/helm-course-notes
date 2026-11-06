@@ -1,5 +1,7 @@
 # Lab 03 - Install the Tooling
 
+> Reference setup: [`labs/setup/lab03`](../labs/setup/lab03/README.md)
+
 ## Goal
 
 Prepare a local Kubernetes environment for the rest of the labs and verify

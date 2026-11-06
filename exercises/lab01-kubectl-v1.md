@@ -1,5 +1,7 @@
 # Lab 01 - Guestbook v1 with `kubectl`
 
+> Reference manifests: [`labs/raw/lab01`](../labs/raw/lab01/README.md)
+
 ## Goal
 
 Deploy the first version of the Guestbook application using only

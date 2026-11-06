@@ -1,0 +1,2 @@
+# This stage copies the raw v2 manifests into subcharts. Values are still
+# hard-coded inside the subchart templates; Lab 07 introduces parent values.

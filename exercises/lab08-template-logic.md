@@ -1,5 +1,7 @@
 # Lab 08 - Template Logic
 
+> Reference implementation: [`labs/reference/lab08/guestbook`](../labs/reference/lab08/guestbook)
+
 ## Goal
 
 Add real templating logic to the Guestbook chart: functions, pipelines,

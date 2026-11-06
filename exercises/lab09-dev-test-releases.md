@@ -1,5 +1,7 @@
 # Lab 09 - Dev and Test Releases
 
+> Reference implementation: [`labs/reference/lab09/guestbook`](../labs/reference/lab09/guestbook)
+
 ## Goal
 
 Run the same chart as two independent releases in two namespaces, with

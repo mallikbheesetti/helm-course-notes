@@ -14,7 +14,9 @@ compatible with Helm 4 unless noted. Always check your version with
 | --- | --- |
 | `notes/` | Ordered study notes, one file per course section plus a cheatsheet and troubleshooting guide |
 | `exercises/` | Eleven labs that build from raw `kubectl` manifests to dependencies and third-party charts |
+| `labs/` | Original lab manifests and fully working reference charts, organized as `raw/`, `setup/`, and `reference/` |
 | `starters/helm-chart-skeleton/` | Minimal chart skeleton to copy when starting a lab |
+| `scripts/validate.sh` | Lints and renders every reference chart |
 | `sources/` | Extracted text from the original slide decks, kept for reference |
 
 ## Learning path
@@ -40,6 +42,29 @@ compatible with Helm 4 unless noted. Always check your version with
 | 09 | Multiple environments | dev and test releases from one chart |
 | 10 | Dependencies | package, repository, dependency update, conditions and tags |
 | 11 | Existing charts | search, inspect, install, customize third-party charts |
+
+## Reference implementations
+
+The [`labs/`](labs/README.md) directory holds the course lab material in
+three groups:
+
+- `labs/raw/` - the original Guestbook `kubectl` manifests from Labs 01 and 02.
+- `labs/setup/` - installation and cluster setup instructions for Labs 03 and 04.
+- `labs/reference/` - working charts for Labs 05 through 11.
+
+Every reference chart is adapted so it can be linted and rendered offline:
+Labs 06 through 10 use `file://` dependencies, and Lab 11 vendors its
+packaged subcharts under `charts/`. The upstream `backend-secret.yaml`
+templates also used a non-existent `.port` value; the reference copies use
+`.dbport` so the generated MongoDB URI is valid.
+
+Validate every reference chart with:
+
+```sh
+./scripts/validate.sh
+```
+
+The same script runs in CI on pushes and pull requests.
 
 ## Conventions used in the labs
 

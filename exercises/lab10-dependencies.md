@@ -1,5 +1,7 @@
 # Lab 10 - Dependencies, Packaging, and Repositories
 
+> Reference implementation: [`labs/reference/lab10/guestbook`](../labs/reference/lab10/guestbook)
+
 ## Goal
 
 Package a chart, create a local repository, declare dependencies, control

@@ -1,0 +1,12 @@
+frontend:
+  image:
+    repository: phico/frontend
+    tag: "1.1"
+    pullPolicy: Always
+  replicaCount: 1
+  service:
+    port: 80
+    targetPort: 4200
+  ingress:
+    enabled: true
+    host: frontend.minikube.local

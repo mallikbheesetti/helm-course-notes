@@ -18,11 +18,8 @@ directory:
 read as polished documentation. The PDFs themselves are not copied into
 this repository.
 
-Original location:
-
-```
-/Users/arjunshrinivas/workspace/helm-practice/helm-notes/
-```
+The original slides live outside this repository in the local course
+workspace (for example, `helm-practice/helm-notes/`).
 
 The archive `kubernetes-packaging-applications-helm.zip` contains the
 same PDF decks.

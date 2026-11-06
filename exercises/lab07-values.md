@@ -1,5 +1,7 @@
 # Lab 07 - Values and Overrides
 
+> Reference implementation: [`labs/reference/lab07/guestbook`](../labs/reference/lab07/guestbook)
+
 ## Goal
 
 Parameterize the Guestbook chart and practice every common way to supply

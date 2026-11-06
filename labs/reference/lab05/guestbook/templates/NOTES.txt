@@ -1,0 +1,13 @@
+Release {{ .Release.Name }} installed in namespace {{ .Release.Namespace }}.
+
+{{- if .Values.frontend.ingress.enabled }}
+
+Open the frontend at:
+
+  http://{{ .Release.Name }}.{{ .Values.frontend.ingress.host }}
+{{- else }}
+
+Port-forward the frontend:
+
+  kubectl port-forward svc/{{ .Release.Name }}-frontend 8080:{{ .Values.frontend.service.port }} -n {{ .Release.Namespace }}
+{{- end }}

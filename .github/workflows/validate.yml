@@ -1,0 +1,25 @@
+name: Validate charts
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.17.0
+
+      - name: Show Helm version
+        run: helm version --short
+
+      - name: Lint and render reference charts
+        run: ./scripts/validate.sh

@@ -1,0 +1,11 @@
+Release {{ .Release.Name }} installed in namespace {{ .Release.Namespace }}.
+
+The Guestbook v2 application is exposed through the frontend Ingress:
+
+  http://frontend.minikube.local
+
+The backend API is available through the backend Ingress:
+
+  http://backend.minikube.local
+
+Add these hostnames to /etc/hosts and run `minikube tunnel` if needed.

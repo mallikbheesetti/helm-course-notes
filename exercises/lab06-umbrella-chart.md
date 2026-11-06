@@ -1,5 +1,7 @@
 # Lab 06 - Umbrella Chart
 
+> Reference implementation: [`labs/reference/lab06/guestbook`](../labs/reference/lab06/guestbook)
+
 ## Goal
 
 Build a parent Guestbook chart that packages frontend, backend, and

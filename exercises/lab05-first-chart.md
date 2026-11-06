@@ -1,5 +1,7 @@
 # Lab 05 - Your First Chart
 
+> Reference implementation: [`labs/reference/lab05/guestbook`](../labs/reference/lab05/guestbook)
+
 ## Goal
 
 Convert the raw Guestbook v1 manifests from Lab 01 into a reusable Helm

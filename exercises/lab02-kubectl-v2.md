@@ -1,5 +1,7 @@
 # Lab 02 - Guestbook v2 with `kubectl`
 
+> Reference manifests: [`labs/raw/lab02`](../labs/raw/lab02/README.md)
+
 ## Goal
 
 Deploy the full three-tier Guestbook with raw Kubernetes manifests:

@@ -1,5 +1,7 @@
 # Lab 04 - Release Lifecycle
 
+> Reference setup: [`labs/setup/lab04`](../labs/setup/lab04/README.md)
+
 ## Goal
 
 Practice install, upgrade, history, rollback, status, inspection, and
